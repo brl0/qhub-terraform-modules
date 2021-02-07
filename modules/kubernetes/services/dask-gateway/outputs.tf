@@ -8,7 +8,7 @@ output "config" {
   value = {
     gateway = {
       address          = "http://traefik-${var.name}"
-      "proxy-address"  = "proxy-public-${var.name}:8786"
+      "proxy-address"  = "proxy-public:8786"
       "public-address" = var.external_endpoint
 
       auth = {
