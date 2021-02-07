@@ -106,7 +106,8 @@ module "kubernetes-dask-gateway" {
           clusterStartTimeout = 300 # 5 minutes
           workerStartTimeout  = 300 # 5 minutes
 
-          image = var.dask-worker-image
+          # TODO: Change
+          image = "daskgateway/dask-gateway-server"
 
           scheduler = {
             extraContainerConfig = {
@@ -189,7 +190,7 @@ resource "kubernetes_ingress" "dask-gateway" {
       http {
         path {
           backend {
-            service_name = "web-public-dask-gateway"
+            service_name = "traefik-dask-gateway"
             service_port = 80
           }
 
