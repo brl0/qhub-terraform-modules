@@ -8,8 +8,8 @@ output "config" {
   value = {
     gateway = {
       address          = "http://traefik-${var.name}"
-      "proxy-address"  = "proxy-public:8786"
-      "public-address" = var.external_endpoint
+      # "proxy-address"  = "proxy-public:8786"
+      public-address = var.external_endpoint
 
       auth = {
         type = "jupyterhub"
