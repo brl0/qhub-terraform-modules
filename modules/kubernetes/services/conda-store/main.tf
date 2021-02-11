@@ -71,7 +71,7 @@ resource "kubernetes_deployment" "main" {
       spec {
         container {
           name  = "conda-store"
-          image = "quansight/conda-store:e2051a36e60bd3abd9aa44105f240b359ee6bab7"
+          image = "quansight/conda-store:v0.1.4"
 
           command = [
             "python", "/opt/conda-store/conda-store.py",
