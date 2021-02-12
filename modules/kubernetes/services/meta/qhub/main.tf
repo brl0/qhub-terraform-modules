@@ -106,8 +106,7 @@ module "kubernetes-dask-gateway" {
           clusterStartTimeout = 300 # 5 minutes
           workerStartTimeout  = 300 # 5 minutes
 
-          # TODO: FIX
-          # image = var.dask-worker-image
+          image = var.dask-worker-image
 
           scheduler = {
             extraContainerConfig = {
