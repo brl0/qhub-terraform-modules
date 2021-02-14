@@ -59,7 +59,7 @@ gateway:
 
   livenessProbe:
     # Enables the livenessProbe.
-    enabled: true
+    enabled: false
     # Configures the livenessProbe.
     initialDelaySeconds: 5
     timeoutSeconds: 2
@@ -67,7 +67,7 @@ gateway:
     failureThreshold: 6
   readinessProbe:
     # Enables the readinessProbe.
-    enabled: true
+    enabled: false
     # Configures the readinessProbe.
     initialDelaySeconds: 5
     timeoutSeconds: 2
