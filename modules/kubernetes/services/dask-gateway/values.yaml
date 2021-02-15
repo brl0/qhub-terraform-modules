@@ -22,7 +22,7 @@ gateway:
   prefix: /
 
   # The gateway server log level
-  loglevel: INFO
+  loglevel: DEBUG
 
   # The image to use for the gateway-server pod.
   image:
@@ -163,7 +163,7 @@ controller:
   imagePullSecrets: []
 
   # The controller log level
-  loglevel: INFO
+  loglevel: DEBUG
 
   # Max time (in seconds) to keep around records of completed clusters.
   # Default is 24 hours.
@@ -216,7 +216,7 @@ traefik:
   additionalArguments: []
 
   # The proxy log level
-  loglevel: WARN
+  loglevel: INFO
 
   # Whether to expose the dashboard on port 9000 (enable for debugging only!)
   dashboard: false
