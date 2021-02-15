@@ -239,7 +239,7 @@ traefik:
 
   # Settings for nodeSelector, affinity, and tolerations for the traefik pods
   nodeSelector:
-    ingress-ready: true
+    ingress-ready: "true"
   affinity: {}
   tolerations: []
 
