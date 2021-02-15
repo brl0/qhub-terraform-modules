@@ -57,6 +57,15 @@ gateway:
       # Configuration fields to set on the authenticator class.
       options: {}
 
+  http-client:
+    proxy: false        # The http proxy configuration to use when contacting
+                        # the dask-gateway server. If `true` (default), this is
+                        # inferred from your environment (i.e. `HTTP(S)_PROXY`
+                        # environment variables).  Set to `false` to disable
+                        # this inference. You may also specify a proxy address
+                        # explicitly (e.g.  `http://user:password@host:port`).
+                        # May be a template string.
+
   livenessProbe:
     # Enables the livenessProbe.
     enabled: true
