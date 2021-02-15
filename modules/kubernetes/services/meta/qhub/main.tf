@@ -201,13 +201,6 @@ resource "kubernetes_ingress" "dask-gateway" {
           }
           path = "/"
         }
-        path {
-          backend {
-            service_name = "traefik-dask-gateway"
-            service_port = 9000
-          }
-          path = "/dashboard"
-        }
       }
     }
 

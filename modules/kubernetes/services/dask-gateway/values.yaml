@@ -219,7 +219,7 @@ traefik:
   loglevel: INFO
 
   # Whether to expose the dashboard on port 9000 (enable for debugging only!)
-  dashboard: true
+  dashboard: false
 
   # Additional configuration for the traefik service
   service:
@@ -238,13 +238,9 @@ traefik:
         nodePort: null
 
   # Settings for nodeSelector, affinity, and tolerations for the traefik pods
-  nodeSelector:
-    ingress-ready: "true"
+  nodeSelector: {}
   affinity: {}
-  tolerations:
-  - key: "node-role.kubernetes.io/master"
-    operator: "Equal"
-    effect: NoSchedule
+  tolerations: []
 
 rbac:
   # Whether to enable RBAC.
