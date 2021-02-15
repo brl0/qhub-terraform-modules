@@ -241,7 +241,10 @@ traefik:
   nodeSelector:
     ingress-ready: "true"
   affinity: {}
-  tolerations: []
+  tolerations:
+  - key: "node-role.kubernetes.io/master"
+    operator: "Equal"
+    effect: NoSchedule
 
 rbac:
   # Whether to enable RBAC.
