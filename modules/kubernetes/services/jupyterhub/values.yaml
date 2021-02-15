@@ -6,8 +6,8 @@ hub:
   baseUrl: "/"
 
 proxy:
-  https:
-    enabled: true
+  # https:
+  #   enabled: true
   secretToken: "<placeholder>"
   service:
     type: NodePort
