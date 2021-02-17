@@ -74,14 +74,10 @@ resource "kubernetes_deployment" "main" {
             required_during_scheduling_ignored_during_execution {
               node_selector_term {
                 match_expressions {
-                  [
-                    {
-                      key      = var.node-group.key
-                      operator = "In"
-                      values = [
-                        var.node-group.value
-                      ]
-                    }
+                  key      = var.node-group.key
+                  operator = "In"
+                  values = [
+                    var.node-group.value
                   ]
                 }
               }
