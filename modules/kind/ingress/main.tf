@@ -36,9 +36,17 @@ resource "helm_release" "ingress-nginx" {
   ]
 }
 
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [helm_release.ingress-nginx]
+  create_duration = "30s"
+  triggers = {
+    ingress_helm = helm_release.ingress-nginx
+  }
+}
+
 resource "null_resource" "dependency_setter" {
   depends_on = [
-    helm_release.ingress-nginx,
+    time_sleep.wait_30_seconds.triggers["ingress_helm"],
     # List resource(s) that will be constructed last within the module.
   ]
 }
