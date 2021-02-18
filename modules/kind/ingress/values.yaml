@@ -18,3 +18,7 @@ controller:
     enabled: false
   extraArgs:
     publish-status-address: localhost
+  admissionWebhooks:
+    enabled: true
+    service:
+      type: clusterIP
