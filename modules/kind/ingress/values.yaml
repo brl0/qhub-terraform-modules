@@ -21,4 +21,4 @@ controller:
   admissionWebhooks:
     enabled: true
     service:
-      type: clusterIP
+      type: ClusterIP
