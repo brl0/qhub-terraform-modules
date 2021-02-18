@@ -28,7 +28,9 @@ resource "helm_release" "ingress-nginx" {
   repository = data.helm_repository.ingress-nginx.metadata[0].name
   chart      = "ingress-nginx"
   version    = "3.23.0"
-  values = file("${path.module}/values.yaml")
+  values = [
+    file("${path.module}/values.yaml"),
+  ]
   depends_on = [
     kubernetes_namespace.namespace_ingress_nginx,
   ]
