@@ -4,19 +4,6 @@ resource "null_resource" "dependency_getter" {
   }
 }
 
-resource "kubernetes_namespace" "namespace_ingress_nginx" {
-  metadata {
-    labels = {
-      "app.kubernetes.io/instance" = "ingress-nginx"
-      "app.kubernetes.io/name"     = "ingress-nginx"
-    }
-    name = "ingress-nginx"
-  }
-  depends_on = [
-    null_resource.dependency_getter
-  ]
-}
-
 data "helm_repository" "ingress-nginx" {
   name = "ingress-nginx"
   url  = "https://kubernetes.github.io/ingress-nginx"
@@ -27,12 +14,11 @@ resource "helm_release" "ingress-nginx" {
   namespace = "dev"
   repository = data.helm_repository.ingress-nginx.metadata[0].name
   chart      = "ingress-nginx"
-  version    = "3.23.0"
   values = [
     file("${path.module}/values.yaml"),
   ]
   depends_on = [
-    kubernetes_namespace.namespace_ingress_nginx,
+    null_resource.dependency_getter,
   ]
 }
 
