@@ -24,7 +24,7 @@ data "helm_repository" "ingress-nginx" {
 
 resource "helm_release" "ingress-nginx" {
   name      = "ingress-nginx"
-  namespace = "ingress-nginx"
+  namespace = "dev"
   repository = data.helm_repository.ingress-nginx.metadata[0].name
   chart      = "ingress-nginx"
   version    = "3.23.0"
