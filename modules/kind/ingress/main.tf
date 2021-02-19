@@ -78,6 +78,8 @@ resource "helm_release" "clusterissuer" {
   chart = "${path.module}/chart"
   force_update = true
   replace = true
+  reset_values = true
+  recreate_pods = true
   values = [
     file("${path.module}/clusterissuer-values.yaml"),
     file("${path.module}/cert-manager-values.yaml"),
