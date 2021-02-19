@@ -74,9 +74,12 @@ resource "time_sleep" "wait_30_seconds" {
 }
 
 resource "helm_release" "clusterissuer" {
-  name       = "clusterissuer"
-  chart      = "${path.module}/chart"
-  values     = [file("${path.module}/clusterissuer.yaml")]
+  name  = "clusterissuer"
+  chart = "${path.module}/chart"
+  values = [
+    file("${path.module}/clusterissuer.yaml"),
+    file("${path.module}/cert-manager.yaml"),
+  ]
   depends_on = [time_sleep.wait_30_seconds]
 }
 
