@@ -14,20 +14,21 @@ resource "helm_release" "cert-manager" {
   namespace  = var.namespace
   repository = data.helm_repository.jetstack.metadata[0].name
   chart      = "cert-manager"
-  values = concat([
-    file("${path.module}/cert-manager.yaml"),
-    jsonencode({
-      "cert-manager" = {
-        affinity = local.affinity
-        cainjector = {
-          affinity = local.affinity
-        }
-        webhook = {
-          affinity = local.affinity
-        }
-      }
-    }),
-  ])
+  values = [file("${path.module}/cert-manager.yaml")]
+  # values = concat([
+  #   file("${path.module}/cert-manager.yaml"),
+  #   jsonencode({
+  #     "cert-manager" = {
+  #       affinity = local.affinity
+  #       cainjector = {
+  #         affinity = local.affinity
+  #       }
+  #       webhook = {
+  #         affinity = local.affinity
+  #       }
+  #     }
+  #   }),
+  # ])
   set {
     name  = "installCRDs"
     value = "true"

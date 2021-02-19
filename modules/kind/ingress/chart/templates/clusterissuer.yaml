@@ -1,7 +1,5 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
-# metadata:
-#   name: {{ index .Values "cert-manager" "ingressShim" "defaultIssuerName" }}
 spec:
   acme:
     server: {{ .Values.clusterissuer.server }}
