@@ -3,3 +3,9 @@ variable "dependencies" {
   type        = list(any)
   default     = []
 }
+
+variable "overrides" {
+  description = "Overrides for values.yaml in helm configuration"
+  type        = list(string)
+  default     = []
+}
