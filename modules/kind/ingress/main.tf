@@ -37,6 +37,10 @@ resource "helm_release" "cert-manager" {
     null_resource.dependency_getter,
   ]
 }
+resource "time_sleep" "wait_10_seconds" {
+  depends_on      = [helm_release.cert-manager]
+  create_duration = "10s"
+}
 
 data "helm_repository" "ingress-nginx" {
   name = "ingress-nginx"
@@ -66,7 +70,7 @@ resource "helm_release" "ingress-nginx" {
   #   }),
   # ])
   depends_on = [
-    helm_release.cert-manager,
+    time_sleep.wait_10_seconds,
   ]
 }
 
@@ -75,16 +79,17 @@ resource "time_sleep" "wait_30_seconds" {
   create_duration = "30s"
 }
 
-resource "helm_release" "clusterissuer" {
-  name       = "clusterissuer"
-  chart      = "${path.module}/chart"
-  values     = [file("${path.module}/clusterissuer.yaml")]
-  depends_on = [time_sleep.wait_30_seconds]
-}
+# resource "helm_release" "clusterissuer" {
+#   name       = "clusterissuer"
+#   chart      = "${path.module}/chart"
+#   values     = [file("${path.module}/clusterissuer.yaml")]
+#   depends_on = [time_sleep.wait_30_seconds]
+# }
 
 resource "null_resource" "dependency_setter" {
   depends_on = [
-    helm_release.clusterissuer,
+    time_sleep.wait_30_seconds,
+    # helm_release.clusterissuer,
     # List resource(s) that will be constructed last within the module.
   ]
 }
