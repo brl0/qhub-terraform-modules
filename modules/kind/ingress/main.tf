@@ -14,20 +14,21 @@ resource "helm_release" "cert-manager" {
   namespace  = var.namespace
   repository = data.helm_repository.jetstack.metadata[0].name
   chart      = "cert-manager"
-  values = concat([
-    file("${path.module}/cert-manager.yaml"),
-    jsonencode({
-      "cert-manager" = {
-        affinity = local.affinity
-        cainjector = {
-          affinity = local.affinity
-        }
-        webhook = {
-          affinity = local.affinity
-        }
-      }
-    }),
-  ])
+  values     = [file("${path.module}/cert-manager.yaml")]
+  # values = concat([
+  #   file("${path.module}/cert-manager.yaml"),
+  #   jsonencode({
+  #     "cert-manager" = {
+  #       affinity = local.affinity
+  #       cainjector = {
+  #         affinity = local.affinity
+  #       }
+  #       webhook = {
+  #         affinity = local.affinity
+  #       }
+  #     }
+  #   }),
+  # ])
   set {
     name  = "installCRDs"
     value = "true"
@@ -47,22 +48,23 @@ resource "helm_release" "ingress-nginx" {
   namespace  = var.namespace
   repository = data.helm_repository.ingress-nginx.metadata[0].name
   chart      = "ingress-nginx"
-  values = concat([
-    file("${path.module}/ingress-nginx.yaml"),
-    jsonencode({
-      "nginx-ingress" = {
-        controller = {
-          affinity = local.affinity
-          livenessProbe = {
-            timeoutSeconds = 20
-          }
-        }
-        defaultBackend = {
-          affinity = local.affinity
-        }
-      }
-    }),
-  ])
+  values     = [file("${path.module}/ingress-nginx.yaml")]
+  # values = concat([
+  #   file("${path.module}/ingress-nginx.yaml"),
+  #   jsonencode({
+  #     "nginx-ingress" = {
+  #       controller = {
+  #         affinity = local.affinity
+  #         livenessProbe = {
+  #           timeoutSeconds = 20
+  #         }
+  #       }
+  #       defaultBackend = {
+  #         affinity = local.affinity
+  #       }
+  #     }
+  #   }),
+  # ])
   depends_on = [
     helm_release.cert-manager,
   ]
