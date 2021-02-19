@@ -76,6 +76,7 @@ resource "time_sleep" "wait_30_seconds" {
 resource "helm_release" "clusterissuer" {
   name  = "clusterissuer"
   chart = "${path.module}/chart"
+  replace = true
   values = [
     file("${path.module}/clusterissuer-values.yaml"),
     file("${path.module}/cert-manager-values.yaml"),
