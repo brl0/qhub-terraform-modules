@@ -9,6 +9,9 @@ resource "helm_release" "ingress" {
   namespace = var.namespace
   chart = "${path.module}/chart"
   dependency_update = true
+  force_update = true
+  recreate_pods = true
+  replace = true
 
   values = concat([
     file("${path.module}/values.yaml"),
