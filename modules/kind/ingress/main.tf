@@ -11,7 +11,7 @@ resource "helm_release" "ingress" {
   dependency_update = true
 
   values = concat([
-    file("${path.module}/chart/charts/values.yaml"),
+    file("${path.module}/values.yaml"),
     jsonencode({
       "cert-manager" = {
         affinity = local.affinity
