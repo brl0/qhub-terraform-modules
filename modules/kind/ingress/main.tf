@@ -14,21 +14,20 @@ resource "helm_release" "cert-manager" {
   namespace  = var.namespace
   repository = data.helm_repository.jetstack.metadata[0].name
   chart      = "cert-manager"
-  values = [file("${path.module}/cert-manager.yaml")]
-  # values = concat([
-  #   file("${path.module}/cert-manager.yaml"),
-  #   jsonencode({
-  #     "cert-manager" = {
-  #       affinity = local.affinity
-  #       cainjector = {
-  #         affinity = local.affinity
-  #       }
-  #       webhook = {
-  #         affinity = local.affinity
-  #       }
-  #     }
-  #   }),
-  # ])
+  values = concat([
+    file("${path.module}/cert-manager-values.yaml"),
+    jsonencode({
+      "cert-manager" = {
+        affinity = local.affinity
+        cainjector = {
+          affinity = local.affinity
+        }
+        webhook = {
+          affinity = local.affinity
+        }
+      }
+    }),
+  ])
   set {
     name  = "installCRDs"
     value = "true"
@@ -53,7 +52,7 @@ resource "helm_release" "ingress-nginx" {
   repository = data.helm_repository.ingress-nginx.metadata[0].name
   chart      = "ingress-nginx"
   values = concat([
-    file("${path.module}/ingress-nginx.yaml"),
+    file("${path.module}/ingress-nginx-values.yaml"),
     jsonencode({
       "nginx-ingress" = {
         controller = {
@@ -78,8 +77,8 @@ resource "helm_release" "clusterissuer" {
   name  = "clusterissuer"
   chart = "${path.module}/chart"
   values = [
-    file("${path.module}/clusterissuer.yaml"),
-    file("${path.module}/cert-manager.yaml"),
+    file("${path.module}/clusterissuer-values.yaml"),
+    file("${path.module}/cert-manager-values.yaml"),
   ]
   depends_on = [time_sleep.wait_30_seconds]
 }
