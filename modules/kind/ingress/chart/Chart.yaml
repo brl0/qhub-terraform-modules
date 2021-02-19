@@ -4,7 +4,7 @@ description: A Helm chart for Ingress
 type: application
 version: 0.2.0
 dependencies:
- - name: nginx-ingress
+ - name: ingress-nginx
    repository: https://kubernetes.github.io/ingress-nginx
  - name: cert-manager
    repository: https://charts.jetstack.io
