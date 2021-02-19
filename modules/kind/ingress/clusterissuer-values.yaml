@@ -1,3 +1,8 @@
+cert-manager:
+  ingressShim:
+    defaultIssuerName: letsencrypt-production
+    defaultIssuerKind: ClusterIssuer
+
 clusterissuer:
   email: B_R_L@hotmail.com
   server: https://acme-v02.api.letsencrypt.org/directory

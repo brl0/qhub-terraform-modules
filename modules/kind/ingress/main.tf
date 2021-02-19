@@ -82,7 +82,6 @@ resource "helm_release" "clusterissuer" {
   recreate_pods = true
   values = [
     file("${path.module}/clusterissuer-values.yaml"),
-    file("${path.module}/cert-manager-values.yaml"),
   ]
   depends_on = [time_sleep.wait_30_seconds]
 }
