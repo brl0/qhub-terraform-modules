@@ -4,6 +4,25 @@ resource "null_resource" "dependency_getter" {
   }
 }
 
+data "helm_repository" "jetstack" {
+  name = "jetstack"
+  url  = "https://charts.jetstack.io"
+}
+
+resource "helm_release" "cert-manager" {
+  name       = "cert-manager"
+  namespace  = "dev"
+  repository = data.helm_repository.jetstack.metadata[0].name
+  chart      = "cert-manager"
+  set {
+    name = "installCRDs"
+    value = "true"
+  }
+  depends_on = [
+    null_resource.dependency_getter,
+  ]
+}
+
 data "helm_repository" "ingress-nginx" {
   name = "ingress-nginx"
   url  = "https://kubernetes.github.io/ingress-nginx"
@@ -18,7 +37,7 @@ resource "helm_release" "ingress-nginx" {
     file("${path.module}/values.yaml"),
   ]
   depends_on = [
-    null_resource.dependency_getter,
+    helm_release.cert-manager,
   ]
 }
 
