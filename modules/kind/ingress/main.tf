@@ -7,8 +7,8 @@ resource "null_resource" "dependency_getter" {
 resource "helm_release" "ingress" {
   name      = "ingress"
   namespace = var.namespace
-
   chart = "${path.module}/chart"
+  dependency_update = true
 
   values = concat([
     file("${path.module}/chart/values.yaml"),
