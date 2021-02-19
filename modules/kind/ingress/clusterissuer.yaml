@@ -1,0 +1,3 @@
+clusterissuer:
+  email: B_R_L@hotmail.com
+  server: https://acme-v02.api.letsencrypt.org/directory

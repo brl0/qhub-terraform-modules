@@ -1,12 +1,5 @@
 apiVersion: v2
-name: ingress
-description: A Helm chart for Ingress
+name: clusterissuer
+description: A Helm chart to create a clusterissuer
 type: application
 version: 0.2.0
-dependencies:
- - name: ingress-nginx
-   repository: https://kubernetes.github.io/ingress-nginx
-   version: 3.23.0
- - name: cert-manager
-   repository: https://charts.jetstack.io
-   version: 1.2.0
