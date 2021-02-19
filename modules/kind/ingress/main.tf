@@ -4,51 +4,59 @@ resource "null_resource" "dependency_getter" {
   }
 }
 
-data "helm_repository" "jetstack" {
-  name = "jetstack"
-  url  = "https://charts.jetstack.io"
+resource "helm_release" "ingress" {
+  name      = "ingress"
+  namespace = var.namespace
+
+  chart = "${path.module}/chart"
+
+  values = concat([
+    file("${path.module}/chart/values.yaml"),
+    jsonencode({
+      "cert-manager" = {
+        affinity = local.affinity
+
+        cainjector = {
+          affinity = local.affinity
+        }
+
+        webhook = {
+          affinity = local.affinity
+        }
+      }
+
+      "nginx-ingress" = {
+        controller = {
+          affinity = local.affinity
+          livenessProbe = {
+            timeoutSeconds = 20
+          }
+        }
+
+        defaultBackend = {
+          affinity = local.affinity
+        }
+      }
+    }),
+  ], var.overrides)
+
+  depends_on = [
+    null_resource.dependency_getter
+  ]
 }
 
-resource "helm_release" "cert-manager" {
-  name       = "cert-manager"
-  namespace  = "dev"
-  repository = data.helm_repository.jetstack.metadata[0].name
-  chart      = "cert-manager"
-  set {
-    name = "installCRDs"
-    value = "true"
+data "kubernetes_service" "ingress" {
+  depends_on = [helm_release.ingress]
+
+  metadata {
+    name      = "ingress-nginx-ingress-controller"
+    namespace = var.namespace
   }
-  depends_on = [
-    null_resource.dependency_getter,
-  ]
-}
-
-data "helm_repository" "ingress-nginx" {
-  name = "ingress-nginx"
-  url  = "https://kubernetes.github.io/ingress-nginx"
-}
-
-resource "helm_release" "ingress-nginx" {
-  name       = "ingress-nginx"
-  namespace  = "dev"
-  repository = data.helm_repository.ingress-nginx.metadata[0].name
-  chart      = "ingress-nginx"
-  values = [
-    file("${path.module}/values.yaml"),
-  ]
-  depends_on = [
-    helm_release.cert-manager,
-  ]
-}
-
-resource "time_sleep" "wait_30_seconds" {
-  depends_on      = [helm_release.ingress-nginx]
-  create_duration = "30s"
 }
 
 resource "null_resource" "dependency_setter" {
   depends_on = [
-    time_sleep.wait_30_seconds,
+    helm_release.ingress
     # List resource(s) that will be constructed last within the module.
   ]
 }

@@ -1,24 +1,34 @@
-controller:
-  updateStrategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-  hostPort:
-    enabled: true
-  terminationGracePeriodSeconds: 0
-  service:
-    type: NodePort
-  nodeSelector:
-    ingress-ready: "true"
-  tolerations:
-    - key: "node-role.kubernetes.io/master"
-      operator: "Equal"
-      effect: "NoSchedule"
-  publishService:
-    enabled: false
-  extraArgs:
-    publish-status-address: localhost
-  admissionWebhooks:
-    enabled: true
+cert-manager:
+  ingressShim:
+    defaultIssuerName: letsencrypt-production
+    defaultIssuerKind: ClusterIssuer
+
+clusterissuer:
+  email: B_R_L@hotmail.com
+  server: https://acme-v02.api.letsencrypt.org/directory
+
+nginx-ingress:
+  controller:
+    updateStrategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 1
+    hostPort:
+      enabled: true
+    terminationGracePeriodSeconds: 0
     service:
-      type: ClusterIP
+      type: NodePort
+    nodeSelector:
+      ingress-ready: "true"
+    tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Equal"
+        effect: "NoSchedule"
+    publishService:
+      enabled: false
+    extraArgs:
+      publish-status-address: localhost
+    admissionWebhooks:
+      enabled: true
+      service:
+        type: ClusterIP
