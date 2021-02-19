@@ -14,21 +14,20 @@ resource "helm_release" "cert-manager" {
   namespace  = var.namespace
   repository = data.helm_repository.jetstack.metadata[0].name
   chart      = "cert-manager"
-  # values     = [file("${path.module}/cert-manager.yaml")]
-  # values = concat([
-  #   file("${path.module}/cert-manager.yaml"),
-  #   jsonencode({
-  #     "cert-manager" = {
-  #       affinity = local.affinity
-  #       cainjector = {
-  #         affinity = local.affinity
-  #       }
-  #       webhook = {
-  #         affinity = local.affinity
-  #       }
-  #     }
-  #   }),
-  # ])
+  values = concat([
+    file("${path.module}/cert-manager.yaml"),
+    jsonencode({
+      "cert-manager" = {
+        affinity = local.affinity
+        cainjector = {
+          affinity = local.affinity
+        }
+        webhook = {
+          affinity = local.affinity
+        }
+      }
+    }),
+  ])
   set {
     name  = "installCRDs"
     value = "true"
@@ -52,23 +51,18 @@ resource "helm_release" "ingress-nginx" {
   namespace  = var.namespace
   repository = data.helm_repository.ingress-nginx.metadata[0].name
   chart      = "ingress-nginx"
-  values     = [file("${path.module}/ingress-nginx.yaml")]
-  # values = concat([
-  #   file("${path.module}/ingress-nginx.yaml"),
-  #   jsonencode({
-  #     "nginx-ingress" = {
-  #       controller = {
-  #         affinity = local.affinity
-  #         livenessProbe = {
-  #           timeoutSeconds = 20
-  #         }
-  #       }
-  #       defaultBackend = {
-  #         affinity = local.affinity
-  #       }
-  #     }
-  #   }),
-  # ])
+  values = concat([
+    file("${path.module}/ingress-nginx.yaml"),
+    jsonencode({
+      "nginx-ingress" = {
+        controller = {
+          livenessProbe = {
+            timeoutSeconds = 20
+          }
+        }
+      }
+    }),
+  ])
   depends_on = [
     time_sleep.wait_10_seconds,
   ]
@@ -79,17 +73,16 @@ resource "time_sleep" "wait_30_seconds" {
   create_duration = "30s"
 }
 
-# resource "helm_release" "clusterissuer" {
-#   name       = "clusterissuer"
-#   chart      = "${path.module}/chart"
-#   values     = [file("${path.module}/clusterissuer.yaml")]
-#   depends_on = [time_sleep.wait_30_seconds]
-# }
+resource "helm_release" "clusterissuer" {
+  name       = "clusterissuer"
+  chart      = "${path.module}/chart"
+  values     = [file("${path.module}/clusterissuer.yaml")]
+  depends_on = [time_sleep.wait_30_seconds]
+}
 
 resource "null_resource" "dependency_setter" {
   depends_on = [
-    time_sleep.wait_30_seconds,
-    # helm_release.clusterissuer,
+    helm_release.clusterissuer,
     # List resource(s) that will be constructed last within the module.
   ]
 }
