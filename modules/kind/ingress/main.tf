@@ -14,7 +14,7 @@ resource "helm_release" "cert-manager" {
   namespace  = var.namespace
   repository = data.helm_repository.jetstack.metadata[0].name
   chart      = "cert-manager"
-  values     = [file("${path.module}/cert-manager.yaml")]
+  # values     = [file("${path.module}/cert-manager.yaml")]
   # values = concat([
   #   file("${path.module}/cert-manager.yaml"),
   #   jsonencode({
