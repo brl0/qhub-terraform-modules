@@ -27,7 +27,7 @@ resource "helm_release" "ingress-nginx" {
     }),
   ])
   depends_on = [
-    time_sleep.wait_10_seconds,
+    null_resource.dependency_getter,
   ]
 }
 
