@@ -11,16 +11,26 @@ data "helm_repository" "ingress-nginx" {
 
 resource "helm_release" "ingress-nginx" {
   name       = "ingress-nginx"
-  namespace  = "dev"
+  namespace  = var.namespace
   repository = data.helm_repository.ingress-nginx.metadata[0].name
   chart      = "ingress-nginx"
-  values = [
+  values = concat([
     file("${path.module}/values.yaml"),
-  ]
+    jsonencode({
+      "nginx-ingress" = {
+        controller = {
+          livenessProbe = {
+            timeoutSeconds = 20
+          }
+        }
+      }
+    }),
+  ])
   depends_on = [
-    null_resource.dependency_getter,
+    time_sleep.wait_10_seconds,
   ]
 }
+
 
 resource "time_sleep" "wait_30_seconds" {
   depends_on      = [helm_release.ingress-nginx]
