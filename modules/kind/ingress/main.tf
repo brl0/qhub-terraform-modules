@@ -14,7 +14,7 @@ resource "helm_release" "ingress-nginx" {
   namespace  = var.namespace
   repository = data.helm_repository.ingress-nginx.metadata[0].name
   chart      = "ingress-nginx"
-  values = concat([
+  values     = concat([
     file("${path.module}/values.yaml"),
     jsonencode({
       "nginx-ingress" = {
@@ -30,7 +30,6 @@ resource "helm_release" "ingress-nginx" {
     time_sleep.wait_10_seconds,
   ]
 }
-
 
 resource "time_sleep" "wait_30_seconds" {
   depends_on      = [helm_release.ingress-nginx]
