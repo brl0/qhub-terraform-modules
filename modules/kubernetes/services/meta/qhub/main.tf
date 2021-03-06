@@ -1,9 +1,3 @@
-resource "null_resource" "dependency_getter" {
-  triggers = {
-    my_dependencies = join(",", var.dependencies)
-  }
-}
-
 module "kubernetes-jupyterhub" {
   source = "../../jupyterhub"
 
@@ -88,8 +82,6 @@ module "kubernetes-jupyterhub" {
       }
     })
   ])
-
-  dependencies = var.dependencies
 }
 
 module "kubernetes-dask-gateway" {
@@ -165,7 +157,10 @@ module "kubernetes-dask-gateway" {
     })
   ])
 
-  dependencies = concat(var.dependencies, [module.kubernetes-jupyterhub.depended_on])
+  ## Causes cyclic dependency need to rewrite module
+  # depends_on = [
+  #   module.kubernetes-jupyterhub
+  # ]
 }
 
 resource "kubernetes_config_map" "dask-etc" {
@@ -178,7 +173,6 @@ resource "kubernetes_config_map" "dask-etc" {
     "gateway.yaml"   = jsonencode(module.kubernetes-dask-gateway.config)
     "dashboard.yaml" = jsonencode({})
   }
-  depends_on = [null_resource.dependency_getter]
 }
 
 resource "kubernetes_ingress" "dask-gateway" {
@@ -187,9 +181,9 @@ resource "kubernetes_ingress" "dask-gateway" {
     namespace = var.namespace
 
     annotations = {
-      "cert-manager.io/cluster-issuer"              = "letsencrypt-production"
-      "kubernetes.io/ingress.class"                 = "nginx"
-      "nginx.ingress.kubernetes.io/proxy-body-size" = "0"
+      "kubernetes.io/ingress.class"                           = "traefik"
+      "traefik.ingress.kubernetes.io/router.tls"              = "true"
+      "traefik.ingress.kubernetes.io/router.tls.certresolver" = "default"
     }
   }
 
@@ -219,12 +213,4 @@ resource "kubernetes_ingress" "dask-gateway" {
       hosts       = [var.external-url]
     }
   }
-
-  depends_on = [null_resource.dependency_getter]
-}
-
-resource "null_resource" "dependency_setter" {
-  depends_on = [
-    # List resource(s) that will be constructed last within the module.
-  ]
 }
