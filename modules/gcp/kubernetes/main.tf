@@ -45,6 +45,12 @@ resource "google_container_node_pool" "main" {
       disable-legacy-endpoints = "true"
     }
 
+    taint {
+      key    = local.merged_node_groups[count.index].taint.key
+      value  = local.merged_node_groups[count.index].taint.value
+      effect = local.merged_node_groups[count.index].taint.effect
+    }
+
     dynamic "guest_accelerator" {
       for_each = local.merged_node_groups[count.index].guest_accelerators
 

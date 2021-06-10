@@ -40,12 +40,22 @@ variable "node_groups" {
       instance_type = "n1-standard-2"
       min_size      = 0
       max_size      = 2
+      taint         = {
+        key    = "hub.jupyter.org_dedicated"
+        value  = "user"
+        effect = "NO_SCHEDULE"
+      }
     },
     {
       name          = "worker"
       instance_type = "n1-standard-2"
       min_size      = 0
       max_size      = 5
+      taint         = {
+        key    = "k8s.dask.org_dedicated"
+        value  = "worker"
+        effect = "NO_SCHEDULE"
+      }
     }
   ]
 }
@@ -58,12 +68,17 @@ variable "node_group_defaults" {
     min_size      = number
     max_size      = number
     preemptible   = bool
+    taint = object({
+      key    = string
+      value  = string
+      effect = string
+    })
     guest_accelerators = list(object({
       type  = string
       count = number
     }))
-
   })
+
   default = {
     name          = "node-group-default"
     instance_type = "n1-standard-2"
